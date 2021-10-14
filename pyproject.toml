@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "platzigram"
+version = "0.1.0"
+description = ""
+authors = ["Marco Elizalde <contacto@marcoelizalde.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+Django = "^3.2.8"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
