@@ -150,6 +150,8 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+/media
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 
