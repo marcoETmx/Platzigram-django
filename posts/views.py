@@ -1,45 +1,11 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
 from posts.models import Post
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from posts.forms import PostForm
-
-posts = [
-    {
-        'title': 'Mont Blanc',
-        'user': {
-            'name': 'Yésica Cortés',
-            'picture': 'https://picsum.photos/60/60/?image=1027'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/800/600?image=1036',
-    },
-    {
-        'title': 'Via Láctea',
-        'user': {
-            'name': 'Christian Van der Henst',
-            'picture': 'https://picsum.photos/60/60/?image=1005'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/800/800/?image=903',
-    },
-    {
-        'title': 'Nuevo auditorio',
-        'user': {
-            'name': 'Uriel (thespianartist)',
-            'picture': 'https://picsum.photos/60/60/?image=883'
-        },
-        'timestamp': datetime.now().strftime('%b %dth, %Y - %H:%M hrs'),
-        'photo': 'https://picsum.photos/500/700/?image=1076',
-    }
-]
-
-
-@login_required
-def list_posts(request):
-    posts = Post.object.all().order_by('-created')
-    return render(request, 'posts/feed.html', {'posts': posts})
 
 
 @login_required
@@ -49,7 +15,7 @@ def create_post(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('feed')
+            return redirect('posts:feed')
     else:
         form = PostForm()
 
@@ -62,3 +28,11 @@ def create_post(request):
             'profile': request.user.profile
         }
     )
+
+
+class PostsFeedView(LoginRequiredMixin, ListView):
+    template_name = 'posts/feed.html'
+    model = Post
+    ordering = ('-created',)
+    paginate_by = 2
+    context_object_name = 'posts'
